@@ -188,6 +188,11 @@ __iobuf_arena_alloc (struct iobuf_pool *iobuf_pool, size_t page_size,
                 goto err;
         }
 
+       if (madvise(iobuf_arena->mem_base, iobuf_arena->arena_size, MADV_MERGEABLE))
+       {
+               gf_log (THIS->name, GF_LOG_WARNING, "madvice failed");
+       }
+
         __iobuf_arena_init_iobufs (iobuf_arena);
         if (!iobuf_arena->iobufs) {
                 gf_log (THIS->name, GF_LOG_ERROR, "init failed");
